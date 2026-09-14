@@ -1,20 +1,32 @@
-import { useId, type ReactElement, type FormEvent } from "react"
+import { useId, type ReactNode, type FormEvent } from "react"
 
 interface FormProps {
-    contents: ReactElement[]
+    children: ReactNode
     id?: string
-    onSubmit?: (e: FormEvent<HTMLFormElement>) => void
+    submitLabel?: string
+    onSubmitData?: (data: Record<string, string>) => void
 }
 
-function Form({ contents, id, onSubmit }: FormProps) {
+function Form({ children, id, submitLabel = "Submit", onSubmitData }: FormProps) {
     const generatedId = useId()
     const inputId = id ?? generatedId
 
+    function handleSubmit(e: FormEvent<HTMLFormElement>) {
+        e.preventDefault()
+
+        const formData = new FormData(e.currentTarget)
+        const data: Record<string, string> = {}
+        formData.forEach((value, key) => {
+            data[key] = value.toString()
+        })
+        console.log(JSON.stringify(data, null, 2))
+        onSubmitData?.(data)
+    }
+
     return (
-        <form id={inputId} onSubmit={onSubmit}>
-            {contents.map((content, index) => (
-                <div key={content.key ?? index}>{content}</div>
-            ))}
+        <form id={inputId} onSubmit={handleSubmit}>
+            {children}
+            <button type="submit">{submitLabel}</button>
         </form>
     )
 }
