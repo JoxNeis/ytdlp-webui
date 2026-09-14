@@ -1,12 +1,15 @@
-import Form from "./components/Forms/Form"
-import Textbox from "./components/Forms/Textbox"
+import Form from "../Forms/Form"
+import Textbox from "../Forms/Textbox"
 import './Search.css'
 
 function Search() {
+    function onSubmit() {
+
+    }
     return (
         <div className="search-bar">
             <p>Put your youtube url here:</p>
-            <Form id="searchbar">
+            <Form id="searchbar" onSubmitData={onSubmit}>
                 <Textbox
                     key="query"
                     name="query"
